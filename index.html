@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Run your SHIFT · Communicating with Influence · Accelerate</title>
+<style>
+  :root{
+    --purple:#331C54; --teal:#00B0CA;
+    --ink:#2B2B33; --mute:#6E6E78; --border:#D8D8E0;
+    --lav:#EDEAF2; --lav2:#EEEEF5; --tealtint:#E4F6FA; --offwhite:#FAFAFC;
+    --midpurple:#5B4A7A; --gold:#FFF3D6; --dark2:#2A1745;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Bariol','Calibri','Gill Sans','Segoe UI',sans-serif;
+    color:var(--ink); background:var(--offwhite); line-height:1.5; font-size:16px;
+  }
+  /* ---------- header ---------- */
+  header{background:var(--purple); color:#fff; padding:44px 24px 40px;}
+  .head-inner{max-width:860px; margin:0 auto;}
+  .eyebrow{font-size:12px; letter-spacing:.14em; color:var(--teal); font-weight:700; margin-bottom:14px;}
+  header h1{font-size:clamp(30px,5vw,44px); font-weight:400; line-height:1.1; margin-bottom:12px;}
+  header p.lede{color:#CFC7E0; max-width:60ch; font-size:17px;}
+  .head-rule{height:3px; width:64px; background:var(--teal); margin:18px 0 0;}
+  /* ---------- sticky nav ---------- */
+  nav{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--border);}
+  .nav-inner{max-width:860px; margin:0 auto; display:flex; align-items:center; gap:6px; padding:10px 24px; overflow-x:auto;}
+  .nav-stop{display:flex; align-items:center; gap:6px; text-decoration:none; color:var(--mute); font-size:13px; padding:6px 8px; border-radius:20px; white-space:nowrap;}
+  .nav-stop:hover{background:var(--lav2);}
+  .stop-dot{width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:13px; flex:0 0 auto;}
+  .dash{flex:0 0 14px; border-top:2px dashed var(--border);}
+  .nav-print{margin-left:auto; background:var(--purple); color:#fff; border:none; border-radius:22px; padding:9px 18px; font-size:14px; cursor:pointer; font-family:inherit; white-space:nowrap;}
+  .nav-print:hover{background:var(--dark2);}
+  /* ---------- layout ---------- */
+  main{max-width:860px; margin:0 auto; padding:8px 24px 80px;}
+  section{padding:44px 0 8px; scroll-margin-top:64px;}
+  .stop-head{display:flex; align-items:baseline; gap:14px; margin-bottom:6px;}
+  .stop-letter{width:44px; height:44px; border-radius:50%; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; flex:0 0 auto; align-self:center;}
+  .t-teal{background:var(--teal);} .t-purple{background:var(--purple);}
+  h2{font-size:26px; font-weight:600; color:var(--purple);}
+  .stop-sub{color:var(--mute); font-size:15px; margin:4px 0 20px 58px; max-width:62ch;}
+  .card{background:#fff; border:1px solid var(--border); border-radius:10px; padding:22px; margin-bottom:16px;}
+  .card h3{font-size:16px; color:var(--purple); margin-bottom:4px; font-weight:700;}
+  .hint{color:var(--mute); font-size:13.5px; margin-bottom:12px; max-width:66ch;}
+  label{display:block; font-size:13.5px; font-weight:700; color:var(--purple); margin:14px 0 4px;}
+  label .q{font-weight:400; color:var(--mute);}
+  input[type=text], input[type=date], textarea, select{
+    width:100%; border:1px solid var(--border); border-radius:6px; padding:10px 12px;
+    font-family:inherit; font-size:15px; color:var(--ink); background:var(--offwhite);
+  }
+  textarea{min-height:64px; resize:vertical;}
+  input:focus, textarea:focus, select:focus{outline:2px solid var(--teal); outline-offset:1px; border-color:var(--teal); background:#fff;}
+  .teach{background:var(--tealtint); border-left:3px solid var(--teal); border-radius:0 8px 8px 0; padding:14px 18px; font-size:14.5px; margin-bottom:16px;}
+  .teach b{color:var(--purple);}
+  .watch{background:var(--gold); border-left:3px solid var(--midpurple); border-radius:0 8px 8px 0; padding:14px 18px; font-size:14.5px; margin:18px 0 8px;}
+  .watch .w-title{font-weight:700; color:var(--purple); font-size:13px; letter-spacing:.08em; margin-bottom:6px;}
+  .watch ul{margin-left:18px;}
+  .watch li{margin-bottom:4px;}
+  .chip{display:inline-block; background:var(--lav); color:var(--purple); border-radius:14px; padding:3px 11px; font-size:12.5px; font-weight:700; margin:2px 4px 2px 0;}
+  /* ---------- stakeholder rows ---------- */
+  .stk{border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:14px; background:#fff; position:relative;}
+  .stk.is-top{border-color:var(--teal); box-shadow:0 0 0 2px var(--tealtint);}
+  .stk-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 18px;}
+  .stk-grid .full{grid-column:1 / -1;}
+  .rangewrap{display:flex; align-items:center; gap:10px;}
+  input[type=range]{flex:1; accent-color:var(--teal);}
+  .rangeval{font-weight:700; color:var(--purple); width:26px; text-align:center;}
+  .quad-pill{display:inline-block; border-radius:6px; padding:4px 10px; font-size:13px; font-weight:700; margin-top:6px;}
+  .q-mc{background:var(--purple); color:#fff;} .q-ks{background:var(--midpurple); color:#fff;}
+  .q-ki{background:var(--teal); color:#fff;} .q-mon{background:var(--lav); color:var(--purple);}
+  .flags{display:flex; gap:16px; flex-wrap:wrap; margin-top:8px; align-items:center;}
+  .flags label{display:flex; align-items:center; gap:6px; margin:0; font-weight:400; font-size:14px; color:var(--ink); cursor:pointer;}
+  .flags input{accent-color:var(--purple); width:16px; height:16px;}
+  .def-badge{background:var(--purple); color:var(--teal); border-radius:6px; padding:3px 9px; font-size:12px; font-weight:700;}
+  .stk-actions{display:flex; justify-content:space-between; align-items:center; margin-top:14px; gap:10px; flex-wrap:wrap;}
+  .star-btn{border:1px solid var(--border); background:var(--offwhite); border-radius:20px; padding:7px 14px; font-family:inherit; font-size:13.5px; cursor:pointer; color:var(--ink);}
+  .star-btn.on{background:var(--purple); color:#fff; border-color:var(--purple);}
+  .del-btn{border:none; background:none; color:var(--mute); font-size:13px; cursor:pointer; text-decoration:underline; font-family:inherit;}
+  .add-btn{border:2px dashed var(--border); background:none; border-radius:10px; padding:12px; width:100%; font-family:inherit; font-size:15px; color:var(--midpurple); cursor:pointer; margin-bottom:16px;}
+  .add-btn:hover{border-color:var(--teal); color:var(--purple);}
+  /* ---------- live grid ---------- */
+  .gridwrap{margin:6px 0 4px;}
+  .pi-grid{position:relative; width:100%; aspect-ratio:1.25; background:#fff; border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+  .pi-quad{position:absolute; width:50%; height:50%; padding:8px 10px; font-size:12px; color:var(--mute);}
+  .pi-quad b{display:block; color:var(--purple); font-size:12.5px;}
+  .pi-q1{left:0; top:0; background:var(--lav2);} .pi-q2{right:0; top:0; background:var(--tealtint);}
+  .pi-q3{left:0; bottom:0;} .pi-q4{right:0; bottom:0; background:var(--lav2);}
+  .pi-mid-h{position:absolute; left:0; right:0; top:50%; border-top:1.5px dashed var(--border);}
+  .pi-mid-v{position:absolute; top:0; bottom:0; left:50%; border-left:1.5px dashed var(--border);}
+  .pi-dot{position:absolute; transform:translate(-50%,50%); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:11.5px; font-weight:700; border:2px solid #fff; box-shadow:0 1px 4px rgba(43,43,51,.25); cursor:default;}
+  .pi-dot.top3{outline:3px solid var(--gold);}
+  .axis{display:flex; justify-content:space-between; font-size:12px; color:var(--mute); margin-top:6px;}
+  .axis-y{font-size:12px; color:var(--mute); margin-bottom:6px;}
+  /* ---------- per-person cards in H and F ---------- */
+  .person-card{border:1px solid var(--border); border-left:4px solid var(--teal); border-radius:8px; padding:16px 18px; margin-bottom:14px; background:#fff;}
+  .person-card h4{color:var(--purple); font-size:16px;}
+  .pname{width:100%; border:none; border-bottom:1.5px dashed var(--border); border-radius:0; background:none; padding:2px 0 6px; font-family:inherit; font-size:16px; font-weight:700; color:var(--purple);}
+  .pname:focus{outline:none; border-bottom-color:var(--teal);}
+  .empty-note{background:var(--lav2); border-radius:8px; padding:14px 18px; font-size:14px; color:var(--midpurple);}
+  /* ---------- footer bar ---------- */
+  .printbar{background:var(--purple); border-radius:12px; padding:26px; text-align:center; margin-top:44px;}
+  .printbar p{color:#CFC7E0; font-size:14.5px; margin-bottom:14px;}
+  .big-print{background:var(--teal); color:var(--purple); border:none; border-radius:26px; padding:14px 30px; font-size:16px; font-weight:700; font-family:inherit; cursor:pointer;}
+  .big-print:hover{filter:brightness(1.06);}
+  .util{display:flex; justify-content:center; gap:18px; margin-top:14px;}
+  .util button{background:none; border:none; color:#CFC7E0; font-size:13px; text-decoration:underline; cursor:pointer; font-family:inherit;}
+  footer.page-foot{max-width:860px; margin:0 auto; padding:22px 24px 40px; display:flex; justify-content:space-between; gap:12px; color:var(--mute); font-size:12.5px; flex-wrap:wrap;}
+  footer.page-foot .glory{font-style:italic;}
+  .save-note{position:fixed; bottom:16px; right:16px; background:var(--ink); color:#fff; font-size:12.5px; padding:7px 14px; border-radius:16px; opacity:0; transition:opacity .3s; pointer-events:none;}
+  .save-note.show{opacity:.92;}
+  @media (max-width:640px){ .stk-grid{grid-template-columns:1fr;} }
+
+  /* ---------- print sheet ---------- */
+  #printSheet{display:none;}
+  @media print{
+    body *{visibility:hidden;}
+    body{background:#fff;}
+    #printSheet, #printSheet *{visibility:visible;}
+    #printSheet{display:block; position:absolute; left:0; top:0; width:100%; padding:0 4mm; font-size:12px;}
+    .ps-band{background:var(--purple) !important; color:#fff; padding:14px 18px; border-radius:8px; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .ps-band .eyebrow{color:var(--teal) !important; margin-bottom:4px;}
+    .ps-band h1{font-size:22px; font-weight:400;}
+    .ps-challenge{border-left:3px solid var(--teal); padding:8px 14px; margin:12px 0; font-size:13px; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .ps-challenge b{color:var(--purple);}
+    #printSheet .pi-grid{aspect-ratio:1.7; border:1px solid var(--border); page-break-inside:avoid; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    #printSheet .pi-dot{width:24px; height:24px; font-size:10px; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .ps-table{width:100%; border-collapse:collapse; margin-top:12px; page-break-inside:auto;}
+    .ps-table th{background:var(--lav2); color:var(--purple); text-align:left; padding:6px 8px; font-size:11px; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .ps-table td{border-bottom:1px solid var(--border); padding:6px 8px; vertical-align:top; font-size:11.5px;}
+    .ps-table tr.top3 td{background:var(--tealtint); -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .ps-watch{background:var(--gold); border-radius:8px; padding:10px 14px; margin-top:12px; font-size:11px; page-break-inside:avoid; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .ps-watch b{color:var(--purple);}
+    .ps-foot{display:flex; justify-content:space-between; margin-top:12px; font-size:10.5px; color:var(--mute);}
+    .ps-foot .glory{font-style:italic;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <div class="eyebrow">ACCELERATE &nbsp;·&nbsp; COMMUNICATING WITH INFLUENCE</div>
+    <h1>Run your SHIFT.</h1>
+    <p class="lede">A self-coach for after the workshop. Bring one real influence challenge, work it through the five stops at your own pace, then print your influence map to keep. Nothing is stored and nothing leaves your browser: your answers exist only while this page is open, so work in one sitting and print your map before you close the tab.</p>
+    <div class="head-rule"></div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner" id="navStops">
+    <a class="nav-stop" href="#challenge"><span class="stop-dot" style="background:var(--midpurple)">•</span>Challenge</a>
+    <span class="dash"></span>
+    <a class="nav-stop" href="#stopS"><span class="stop-dot t-teal">S</span>See</a>
+    <span class="dash"></span>
+    <a class="nav-stop" href="#stopH"><span class="stop-dot t-purple">H</span>Hear</a>
+    <span class="dash"></span>
+    <a class="nav-stop" href="#stopI"><span class="stop-dot t-teal">I</span>Idea</a>
+    <span class="dash"></span>
+    <a class="nav-stop" href="#stopF"><span class="stop-dot t-purple">F</span>Flex</a>
+    <span class="dash"></span>
+    <a class="nav-stop" href="#stopT"><span class="stop-dot t-teal">T</span>Take it forward</a>
+    <button class="nav-print" onclick="doPrint()">Print my map</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ========== CHALLENGE ========== -->
+  <section id="challenge">
+    <div class="stop-head">
+      <span class="stop-letter" style="background:var(--midpurple); font-size:16px;">01</span>
+      <h2>My challenge.</h2>
+    </div>
+    <p class="stop-sub">One real thing you are trying to move that you cannot simply direct. The same challenge travels through all five stops, so pick something live.</p>
+    <div class="card">
+      <label for="f_challenge">The influence challenge I am working <span class="q">· what am I trying to make happen, and for whom?</span></label>
+      <textarea id="f_challenge" data-k="challenge" placeholder="e.g. Get the depot team and two peer leaders behind a changed rostering approach before the December trial"></textarea>
+      <label for="f_outcome">What a win looks like <span class="q">· if this lands, what is true in 90 days?</span></label>
+      <textarea id="f_outcome" data-k="outcome" placeholder="Be specific. What is agreed, who owns what, what has started?"></textarea>
+    </div>
+    <div class="watch">
+      <div class="w-title">BEFORE YOU START</div>
+      The order matters: skip a stop and the influence usually breaks there. Most conversations break at Hear (we stop listening) or at Take it forward (we never quite ask). Notice which one is your edge as you go.
+    </div>
+  </section>
+
+  <!-- ========== S ========== -->
+  <section id="stopS">
+    <div class="stop-head">
+      <span class="stop-letter t-teal">S</span>
+      <h2>See the field.</h2>
+    </div>
+    <p class="stop-sub">Map who actually decides the fate of your goal, and why. Attention is the scarcest thing a leader has; spend it on the right people.</p>
+
+    <div class="teach">
+      <b>How to map:</b> for each stakeholder, set <b>Power</b> (their ability to affect the outcome) and <b>Interest</b> (how much they care). The tool places them on the grid and names the move. For the political ones, add the salience read: <b>Legitimacy</b> (is their claim valid?) and <b>Urgency</b> (is their need time-critical?). High power plus both flags makes them <b>definitive</b>: they demand attention now. Finish by naming the RACI and the conversation each person needs.
+    </div>
+
+    <div id="stkList"></div>
+    <button class="add-btn" onclick="addStakeholder()">+ Add a stakeholder</button>
+
+    <div class="card">
+      <h3>My field, live.</h3>
+      <p class="hint">Watch the map build as you set power and interest. Your three make-or-break people carry a gold ring. Star them on their cards above, three only.</p>
+      <div class="gridwrap">
+        <div class="axis-y">Power ↑</div>
+        <div class="pi-grid" id="piGrid">
+          <div class="pi-quad pi-q1"><b>Keep satisfied</b>high power · low interest</div>
+          <div class="pi-quad pi-q2"><b>Manage closely</b>high power · high interest</div>
+          <div class="pi-quad pi-q3"><b>Monitor</b>low power · low interest</div>
+          <div class="pi-quad pi-q4"><b>Keep informed</b>low power · high interest</div>
+          <div class="pi-mid-h"></div><div class="pi-mid-v"></div>
+        </div>
+        <div class="axis"><span>Low interest</span><span>Interest →</span><span>High interest</span></div>
+      </div>
+    </div>
+
+    <div class="watch">
+      <div class="w-title">WATCH OUTS · SEE</div>
+      <ul>
+        <li>Do not confuse loud with powerful. The person making the most noise is not always the one who decides.</li>
+        <li>Maps are living, not fixed. A quiet, legitimate stakeholder becomes a priority the instant urgency spikes. Re-map at each phase.</li>
+        <li>Check for the high-power, low-interest person you have been treating as "keep informed". That is where timelines quietly slip.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========== H ========== -->
+  <section id="stopH">
+    <div class="stop-head">
+      <span class="stop-letter t-purple">H</span>
+      <h2>Hear what they value.</h2>
+    </div>
+    <p class="stop-sub">Diagnose the currency each of your three trades in before you pitch anything. Listen more than you speak.</p>
+
+    <div class="teach">
+      <b>The five currencies</b> (Cohen &amp; Bradford): <b>Inspiration</b> (vision, meaning, doing what matters) · <b>Task</b> (resources, help, faster ways to get the job done) · <b>Position</b> (recognition, reputation, visibility) · <b>Relationship</b> (belonging, being included, personal support) · <b>Personal</b> (gratitude, ownership, comfort).
+      <br><b>Listen with RASA</b> (Treasure): <span class="chip">Receive</span><span class="chip">Appreciate</span><span class="chip">Summarise</span><span class="chip">Ask</span>
+    </div>
+
+    <div id="hearCards"></div>
+
+    <div class="watch">
+      <div class="w-title">WATCH OUTS · HEAR</div>
+      <ul>
+        <li>A complaint is a value showing itself. When they push back, they are telling you what they care about. Write it down.</li>
+        <li>Diagnose before you pitch. If you cannot name their currency, you are not ready to make the case.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========== I ========== -->
+  <section id="stopI">
+    <div class="stop-head">
+      <span class="stop-letter t-teal">I</span>
+      <h2>Idea worth backing.</h2>
+    </div>
+    <p class="stop-sub">One Big Idea, story and data, in their currency. Lead with why.</p>
+
+    <div class="card">
+      <label for="f_big">My Big Idea, in one sentence <span class="q">· what you propose, plus what is at stake (Duarte)</span></label>
+      <textarea id="f_big" data-k="big" placeholder="One sentence. If you need two, it is not one idea yet."></textarea>
+      <label for="f_was">What is <span class="q">· the current state, honestly told</span></label>
+      <textarea id="f_was" data-k="was" placeholder="What it is like today, in terms your stakeholders recognise"></textarea>
+      <label for="f_could">What could be <span class="q">· the contrast that creates the pull</span></label>
+      <textarea id="f_could" data-k="could" placeholder="The picture on the other side of yes"></textarea>
+      <label for="f_number">One number, with a point of view <span class="q">· not ten numbers without one (Duarte, DataStory)</span></label>
+      <input type="text" id="f_number" data-k="number" placeholder="e.g. Three near-misses in eight weeks, and every one was avoidable">
+      <label for="f_why">My why, said first <span class="q">· the reason this matters, before the how and the what (Sinek)</span></label>
+      <textarea id="f_why" data-k="why" placeholder="Start here when you open the conversation"></textarea>
+    </div>
+
+    <div class="watch">
+      <div class="w-title">WATCH OUTS · IDEA</div>
+      <ul>
+        <li>One idea, not five. Every extra ask weakens the main one.</li>
+        <li>Beware the curse of knowledge: you have lived this problem, they have not. Tell the story before the spreadsheet.</li>
+        <li>Put the number in their currency, not yours.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========== F ========== -->
+  <section id="stopF">
+    <div class="stop-head">
+      <span class="stop-letter t-purple">F</span>
+      <h2>Flex and deliver.</h2>
+    </div>
+    <p class="stop-sub">Meet their style, not yours. And keep your feet when it gets bumpy.</p>
+
+    <div class="teach">
+      <b>Open in their thinking preference</b> (HBDI): <b>Analytical</b> wants the facts and the numbers first · <b>Practical</b> wants the plan, steps and risks · <b>Relational</b> wants who is affected and how people feel · <b>Experimental</b> wants the big picture and what is possible.
+      <br><b>Under pressure:</b> structure your answer as <span class="chip">What</span><span class="chip">So what</span><span class="chip">Now what</span> and hold <span class="chip">Pace</span><span class="chip">Space</span><span class="chip">Grace</span>: slow down, let silence work, stay generous.
+    </div>
+
+    <div id="flexCards"></div>
+
+    <div class="watch">
+      <div class="w-title">WATCH OUTS · FLEX</div>
+      <ul>
+        <li>Your default opening is your preference, not theirs. Script the first 30 seconds in their style.</li>
+        <li>Pushback is information, not attack. Pace, space, grace, then What / So what / Now what.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========== T ========== -->
+  <section id="stopT">
+    <div class="stop-head">
+      <span class="stop-letter t-teal">T</span>
+      <h2>Take it forward.</h2>
+    </div>
+    <p class="stop-sub">Influence often fails at the last metre: a great case with no actual ask. Make yours, and make it easy to say yes to.</p>
+
+    <div class="teach">
+      <b>The anatomy of a low-friction ask:</b> <b>Specific</b> (one action, not a program of works) · <b>Bounded</b> (a window, not forever) · <b>Reciprocal</b> (what you will carry in return) · <b>Dated</b> (a first move with a date on it).
+      <br>When you hit a wall, the magic question: <b>"What would it take?"</b> It moves the exchange from confrontation to collaboration and often unearths the real obstacle.
+    </div>
+
+    <div class="card">
+      <h3>Build my ask.</h3>
+      <label for="f_action">The one action I am asking for</label>
+      <input type="text" id="f_action" data-k="action" placeholder="One action. Shrink it until it is easy to say yes to.">
+      <label for="f_window">The window <span class="q">· a trial, a pilot, a timeframe</span></label>
+      <input type="text" id="f_window" data-k="window" placeholder="e.g. A six-week trial, reviewed together at week three">
+      <label for="f_carry">What I will carry in return</label>
+      <input type="text" id="f_carry" data-k="carry" placeholder="The load you take off their plate">
+      <label for="f_first">The first move, with a date</label>
+      <input type="text" id="f_first" data-k="first" placeholder="e.g. I book the walk-through with the team by Friday 25th">
+    </div>
+
+    <div class="card">
+      <h3>Land the agreement with SBI+A.</h3>
+      <p class="hint">The tool you already know from Leading Teams, now closing an influence conversation.</p>
+      <label for="f_sbi_s">Situation <span class="q">· where and when, anchored in the specific</span></label>
+      <input type="text" id="f_sbi_s" data-k="sbi_s">
+      <label for="f_sbi_b">Behaviour <span class="q">· what is happening, described not judged</span></label>
+      <input type="text" id="f_sbi_b" data-k="sbi_b">
+      <label for="f_sbi_i">Impact <span class="q">· the effect, in their currency and yours</span></label>
+      <input type="text" id="f_sbi_i" data-k="sbi_i">
+      <label for="f_sbi_a">+ Agreement <span class="q">· what we agree going forward, what happens next, who owns what</span></label>
+      <textarea id="f_sbi_a" data-k="sbi_a"></textarea>
+    </div>
+
+    <div class="watch">
+      <div class="w-title">WATCH OUTS · TAKE IT FORWARD</div>
+      <ul>
+        <li>The ask you are nervous to make is far more likely to get a yes than you think (Bohns). The most common reason we do not get what we need is that we never actually asked.</li>
+        <li>No date, no deal. An agreement without a first move and a date is a warm conversation, not influence.</li>
+        <li>Warm the ground first: give before you ask, and speak as "we", to a shared win.</li>
+      </ul>
+    </div>
+
+    <div class="printbar">
+      <p>Done the five stops? Print your influence map: your challenge, your field, your three, and the moves each needs. Keep it where you plan your week, and re-map when the field moves. Remember: nothing is stored, so print before you close this page.</p>
+      <button class="big-print" onclick="doPrint()">Print my influence map</button>
+      <div class="util">
+        <button onclick="clearAll()">Clear everything and start again</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="page-foot">
+  <span>THE COHERENCE GROUP &nbsp;·&nbsp; Accelerate · Leading with Impact</span>
+  <span class="glory">Where there's guts there's glory.</span>
+</footer>
+
+<div class="save-note" id="saveNote">Held while this page is open</div>
+
+<!-- ========== PRINT SHEET ========== -->
+<div id="printSheet" aria-hidden="true"></div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY = "cg-shift-v1";
+  var state = { fields:{}, stakeholders:[], hear:{}, flex:{}, freeNames:{} };
+  var uid = function(){ return "s" + Math.random().toString(36).slice(2,9); };
+  var esc = function(t){ return String(t||"").replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); };
+
+  function load(){
+    try{
+      var raw = sessionStorage.getItem(KEY);
+      if(raw){ var p = JSON.parse(raw); if(p && typeof p === "object"){ state = Object.assign(state, p); } }
+    }catch(e){ /* storage unavailable, run in-memory */ }
+    if(!Array.isArray(state.stakeholders)) state.stakeholders = [];
+    if(!state.fields) state.fields = {};
+    if(!state.hear) state.hear = {};
+    if(!state.flex) state.flex = {};
+    if(!state.freeNames) state.freeNames = {};
+  }
+  var saveTimer = null;
+  function save(){
+    try{
+      sessionStorage.setItem(KEY, JSON.stringify(state));
+      var n = document.getElementById("saveNote");
+      n.classList.add("show");
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(function(){ n.classList.remove("show"); }, 1200);
+    }catch(e){ /* ignore */ }
+  }
+
+  /* ----- simple fields ----- */
+  function bindFields(){
+    var els = document.querySelectorAll("[data-k]");
+    els.forEach(function(el){
+      var k = el.getAttribute("data-k");
+      if(state.fields[k]) el.value = state.fields[k];
+      el.addEventListener("input", function(){ state.fields[k] = el.value; save(); });
+    });
+  }
+
+  /* ----- stakeholders ----- */
+  function quadOf(s){
+    var hp = s.power > 5, hi = s.interest > 5;
+    if(hp && hi) return {name:"Manage closely", cls:"q-mc"};
+    if(hp && !hi) return {name:"Keep satisfied", cls:"q-ks"};
+    if(!hp && hi) return {name:"Keep informed", cls:"q-ki"};
+    return {name:"Monitor", cls:"q-mon"};
+  }
+  function isDefinitive(s){ return s.power > 5 && s.legit && s.urgent; }
+  function initials(name){
+    var p = String(name||"").trim().split(/\s+/).filter(Boolean);
+    if(!p.length) return "?";
+    return (p[0][0] + (p[1] ? p[1][0] : "")).toUpperCase();
+  }
+  function topCount(){ return state.stakeholders.filter(function(s){ return s.top3; }).length; }
+
+  window.addStakeholder = function(){
+    state.stakeholders.push({ id:uid(), name:"", role:"", power:5, interest:5, legit:false, urgent:false, raci:"", convo:"", top3:false });
+    save(); renderStakeholders(); renderGrid(); renderPersonCards();
+  };
+  window.removeStakeholder = function(id){
+    state.stakeholders = state.stakeholders.filter(function(s){ return s.id !== id; });
+    delete state.hear[id]; delete state.flex[id];
+    save(); renderStakeholders(); renderGrid(); renderPersonCards();
+  };
+  window.toggleTop = function(id){
+    var s = state.stakeholders.find(function(x){ return x.id === id; });
+    if(!s) return;
+    if(!s.top3 && topCount() >= 3){ alert("Three make-or-break people only. Un-star one first, that is the discipline of the tool."); return; }
+    s.top3 = !s.top3;
+    save(); renderStakeholders(); renderGrid(); renderPersonCards();
+  };
+
+  function stakeholderHTML(s){
+    var q = quadOf(s);
+    var def = isDefinitive(s) ? ' <span class="def-badge">DEFINITIVE · attend to now</span>' : "";
+    return '<div class="stk' + (s.top3 ? " is-top" : "") + '" data-id="' + s.id + '">' +
+      '<div class="stk-grid">' +
+      '<div><label>Name</label><input type="text" class="stk-in" data-f="name" value="' + esc(s.name) + '" placeholder="Who?"></div>' +
+      '<div><label>Role or relationship to the challenge</label><input type="text" class="stk-in" data-f="role" value="' + esc(s.role) + '" placeholder="e.g. Depot operations manager"></div>' +
+      '<div><label>Power <span class="q">· ability to affect the outcome</span></label>' +
+        '<div class="rangewrap"><input type="range" min="0" max="10" class="stk-in" data-f="power" value="' + s.power + '"><span class="rangeval">' + s.power + '</span></div></div>' +
+      '<div><label>Interest <span class="q">· how much they care</span></label>' +
+        '<div class="rangewrap"><input type="range" min="0" max="10" class="stk-in" data-f="interest" value="' + s.interest + '"><span class="rangeval">' + s.interest + '</span></div></div>' +
+      '<div class="full"><span class="quad-pill ' + q.cls + '">' + q.name + '</span>' + def +
+        '<div class="flags">' +
+        '<label><input type="checkbox" class="stk-in" data-f="legit"' + (s.legit ? " checked" : "") + '> Legitimacy: their claim is valid</label>' +
+        '<label><input type="checkbox" class="stk-in" data-f="urgent"' + (s.urgent ? " checked" : "") + '> Urgency: their need is time-critical</label>' +
+        '</div></div>' +
+      '<div><label>RACI on this challenge</label><select class="stk-in" data-f="raci">' +
+        ["","Responsible","Accountable","Consulted","Informed"].map(function(r){
+          return '<option value="' + r + '"' + (s.raci === r ? " selected" : "") + '>' + (r || "Choose…") + '</option>';
+        }).join("") + '</select></div>' +
+      '<div><label>The conversation they need <span class="q">· involve, consult or inform, and about what</span></label><input type="text" class="stk-in" data-f="convo" value="' + esc(s.convo) + '" placeholder="e.g. Involve early: walk the site together before anything is written"></div>' +
+      '</div>' +
+      '<div class="stk-actions">' +
+      '<button class="star-btn' + (s.top3 ? " on" : "") + '" onclick="toggleTop(\'' + s.id + '\')">' + (s.top3 ? "★ One of my three" : "☆ Make one of my three") + '</button>' +
+      '<button class="del-btn" onclick="removeStakeholder(\'' + s.id + '\')">Remove</button>' +
+      '</div></div>';
+  }
+
+  function renderStakeholders(){
+    var wrap = document.getElementById("stkList");
+    if(!state.stakeholders.length){
+      wrap.innerHTML = '<div class="empty-note">Start with everyone who touches this challenge: sponsors, blockers, peers whose work it disrupts, the quiet ones with a valid claim. Then be honest about power and interest.</div>';
+      return;
+    }
+    wrap.innerHTML = state.stakeholders.map(stakeholderHTML).join("");
+    wrap.querySelectorAll(".stk").forEach(function(card){
+      var id = card.getAttribute("data-id");
+      var s = state.stakeholders.find(function(x){ return x.id === id; });
+      card.querySelectorAll(".stk-in").forEach(function(el){
+        var f = el.getAttribute("data-f");
+        var evt = (el.type === "range" || el.type === "checkbox" || el.tagName === "SELECT") ? "change" : "input";
+        var handler = function(){
+          if(el.type === "checkbox") s[f] = el.checked;
+          else if(el.type === "range") s[f] = parseInt(el.value, 10);
+          else s[f] = el.value;
+          save();
+          if(el.type === "range"){ el.parentNode.querySelector(".rangeval").textContent = el.value; }
+          if(f === "power" || f === "interest" || f === "name"){ renderGrid(); }
+          if(f === "name"){ renderPersonCards(true); }
+          if(el.type === "range" || el.type === "checkbox" || el.tagName === "SELECT"){
+            renderStakeholders(); renderGrid();
+          }
+        };
+        el.addEventListener(evt, handler);
+        if(el.type === "range"){ el.addEventListener("input", function(){
+          s[f] = parseInt(el.value, 10);
+          el.parentNode.querySelector(".rangeval").textContent = el.value;
+          var q = quadOf(s);
+          var pillEl = card.querySelector(".quad-pill");
+          if(pillEl){ pillEl.textContent = q.name; pillEl.className = "quad-pill " + q.cls; }
+          renderGrid(); save();
+        }); }
+      });
+    });
+  }
+
+  /* ----- live grid ----- */
+  function dotHTML(s, i){
+    var colors = ["#00B0CA","#331C54","#5B4A7A","#008DA2","#2A1745","#7A6699","#00B0CA","#331C54"];
+    var left = 8 + (s.interest / 10) * 84;
+    var bottom = 8 + (s.power / 10) * 84;
+    return '<span class="pi-dot' + (s.top3 ? " top3" : "") + '" style="left:' + left + '%; bottom:' + bottom + '%; background:' + colors[i % colors.length] + ';" title="' + esc(s.name || "Unnamed") + '">' + esc(initials(s.name)) + '</span>';
+  }
+  function renderGrid(){
+    var g = document.getElementById("piGrid");
+    g.querySelectorAll(".pi-dot").forEach(function(d){ d.remove(); });
+    state.stakeholders.forEach(function(s, i){ g.insertAdjacentHTML("beforeend", dotHTML(s, i)); });
+  }
+
+  /* ----- Hear and Flex per-person cards ----- */
+  var CURRENCIES = ["", "Inspiration: vision, meaning, doing what matters", "Task: resources, help, getting the job done", "Position: recognition, reputation, visibility", "Relationship: belonging, inclusion, support", "Personal: gratitude, ownership, comfort"];
+  var PREFS = ["", "Analytical: facts and numbers first", "Practical: the plan, steps and risks", "Relational: who is affected, how people feel", "Experimental: big picture, what is possible"];
+
+  function tops(){ return state.stakeholders.filter(function(s){ return s.top3; }); }
+
+  function personSlots(){
+    var t = tops();
+    if(t.length) return { list:t, free:false };
+    return { list:["free1","free2","free3"].map(function(id){
+      return { id:id, name:(state.freeNames[id] || "") };
+    }), free:true };
+  }
+
+  function renderPersonCards(namesOnly){
+    var slots = personSlots();
+    var t = slots.list;
+    var hearWrap = document.getElementById("hearCards");
+    var flexWrap = document.getElementById("flexCards");
+    var freeHint = slots.free
+      ? '<div class="empty-note" style="margin-bottom:14px;">This stop works best on your three make-or-break people from See the field, but nothing here is locked. Work straight onto the blank cards below, and connect them to your map whenever you are ready.</div>'
+      : (t.length < 3 ? '<div class="empty-note" style="margin-bottom:14px;">A prompt, not a gate: you can star up to three make-or-break people in See the field.</div>' : "");
+    function headFor(s){
+      return slots.free
+        ? '<input type="text" class="pname" data-id="' + s.id + '" value="' + esc(s.name) + '" placeholder="Who is this person?">'
+        : '<h4>' + esc(s.name || "Unnamed") + '</h4>';
+    }
+    hearWrap.innerHTML = freeHint + t.map(function(s){
+      var h = state.hear[s.id] || {};
+      return '<div class="person-card" data-id="' + s.id + '">' +
+        headFor(s) +
+        '<label>Their currency <span class="q">· what do they trade in?</span></label>' +
+        '<select class="hear-in" data-f="currency">' + CURRENCIES.map(function(c){ return '<option' + (h.currency === c ? " selected" : "") + '>' + c + '</option>'; }).join("") + '</select>' +
+        '<label>What I have actually heard them say <span class="q">· including their complaints, a complaint is a value showing itself</span></label>' +
+        '<textarea class="hear-in" data-f="heard" placeholder="Their words, not your summary of their words">' + esc(h.heard || "") + '</textarea>' +
+        '<label>One open question I will ask before I pitch</label>' +
+        '<input type="text" class="hear-in" data-f="question" value="' + esc(h.question || "") + '" placeholder="e.g. What would make this workable from where you sit?">' +
+        '</div>';
+    }).join("");
+    flexWrap.innerHTML = freeHint + t.map(function(s){
+      var f = state.flex[s.id] || {};
+      return '<div class="person-card" data-id="' + s.id + '">' +
+        headFor(s) +
+        '<label>Their likely thinking preference</label>' +
+        '<select class="flex-in" data-f="pref">' + PREFS.map(function(p){ return '<option' + (f.pref === p ? " selected" : "") + '>' + p + '</option>'; }).join("") + '</select>' +
+        '<label>My opening 30 seconds, in their preference <span class="q">· script it, do not wing it</span></label>' +
+        '<textarea class="flex-in" data-f="opening" placeholder="Word for word if you can">' + esc(f.opening || "") + '</textarea>' +
+        '</div>';
+    }).join("");
+    ["hear","flex"].forEach(function(kind){
+      document.querySelectorAll("#" + kind + "Cards .person-card").forEach(function(card){
+        var id = card.getAttribute("data-id");
+        card.querySelectorAll("." + kind + "-in").forEach(function(el){
+          var f = el.getAttribute("data-f");
+          el.addEventListener(el.tagName === "SELECT" ? "change" : "input", function(){
+            if(!state[kind][id]) state[kind][id] = {};
+            state[kind][id][f] = el.value;
+            save();
+          });
+        });
+      });
+    });
+    document.querySelectorAll(".pname").forEach(function(el){
+      el.addEventListener("input", function(){
+        var id = el.getAttribute("data-id");
+        state.freeNames[id] = el.value;
+        document.querySelectorAll('.pname[data-id="' + id + '"]').forEach(function(o){ if(o !== el) o.value = el.value; });
+        save();
+      });
+    });
+  }
+
+  /* ----- print ----- */
+  function buildPrintSheet(){
+    var t = tops();
+    var f = state.fields;
+    var gridDots = state.stakeholders.map(function(s, i){ return dotHTML(s, i); }).join("");
+    var rows = state.stakeholders.slice().sort(function(a,b){ return (b.top3?1:0)-(a.top3?1:0) || (b.power - a.power); }).map(function(s){
+      var q = quadOf(s);
+      var flags = [];
+      if(s.legit) flags.push("Legitimate");
+      if(s.urgent) flags.push("Urgent");
+      if(isDefinitive(s)) flags.push("DEFINITIVE");
+      var h = state.hear[s.id] || {};
+      var cur = h.currency ? String(h.currency).split(":")[0] : "";
+      return '<tr class="' + (s.top3 ? "top3" : "") + '"><td><b>' + esc(s.name || "Unnamed") + '</b>' + (s.top3 ? " ★" : "") + '<br><span style="color:var(--mute)">' + esc(s.role) + '</span></td>' +
+        '<td>' + q.name + '</td>' +
+        '<td>' + (flags.join(" · ") || "–") + '</td>' +
+        '<td>' + esc(s.raci || "–") + '</td>' +
+        '<td>' + esc(cur || "–") + '</td>' +
+        '<td>' + esc(s.convo || "") + '</td></tr>';
+    }).join("");
+    var today = new Date();
+    var dateStr = today.toLocaleDateString("en-AU", { day:"numeric", month:"long", year:"numeric" });
+    document.getElementById("printSheet").innerHTML =
+      '<div class="ps-band"><div class="eyebrow">ACCELERATE &nbsp;·&nbsp; COMMUNICATING WITH INFLUENCE &nbsp;·&nbsp; MY INFLUENCE MAP</div>' +
+      '<h1>See the field.</h1></div>' +
+      '<div class="ps-challenge"><b>My challenge:</b> ' + esc(f.challenge || "(not yet written)") +
+      (f.outcome ? ' &nbsp;&nbsp;<b>A win in 90 days:</b> ' + esc(f.outcome) : "") + '</div>' +
+      '<div style="font-size:10.5px; color:var(--mute); margin-bottom:2px;">Power ↑ &nbsp;/&nbsp; Interest →</div>' +
+      '<div class="pi-grid">' +
+      '<div class="pi-quad pi-q1"><b>Keep satisfied</b></div><div class="pi-quad pi-q2"><b>Manage closely</b></div>' +
+      '<div class="pi-quad pi-q3"><b>Monitor</b></div><div class="pi-quad pi-q4"><b>Keep informed</b></div>' +
+      '<div class="pi-mid-h"></div><div class="pi-mid-v"></div>' + gridDots + '</div>' +
+      '<table class="ps-table"><thead><tr><th>Stakeholder</th><th>Quadrant move</th><th>Salience</th><th>RACI</th><th>Currency</th><th>The conversation they need</th></tr></thead><tbody>' +
+      (rows || '<tr><td colspan="6">No stakeholders mapped yet.</td></tr>') + '</tbody></table>' +
+      '<div class="ps-watch"><b>WATCH OUTS:</b> Loud is not powerful, the noisiest person is not always the one who decides &nbsp;·&nbsp; Maps are living, re-map when urgency spikes &nbsp;·&nbsp; Check the high-power, low-interest person you have parked at "keep informed" &nbsp;·&nbsp; The order matters: See, then Hear, then Idea, then Flex, then Take it forward. And actually make the ask.</div>' +
+      '<div class="ps-foot"><span>THE COHERENCE GROUP · Accelerate · Leading with Impact · Mapped ' + dateStr + '</span><span class="glory">Where there\'s guts there\'s glory.</span></div>';
+  }
+
+  window.doPrint = function(){ buildPrintSheet(); window.print(); };
+  function hasContent(){
+    var f = Object.keys(state.fields || {}).some(function(k){ return String(state.fields[k] || "").trim(); });
+    return f || (state.stakeholders && state.stakeholders.length > 0);
+  }
+  window.addEventListener("beforeunload", function(e){
+    if(hasContent()){ e.preventDefault(); e.returnValue = ""; }
+  });
+  window.addEventListener("beforeprint", buildPrintSheet);
+
+  window.clearAll = function(){
+    if(!confirm("Clear everything and start again?")) return;
+    try{ sessionStorage.removeItem(KEY); }catch(e){}
+    state = { fields:{}, stakeholders:[], hear:{}, flex:{}, freeNames:{} };
+    document.querySelectorAll("[data-k]").forEach(function(el){ el.value = ""; });
+    renderStakeholders(); renderGrid(); renderPersonCards();
+  };
+
+  /* ----- boot ----- */
+  load();
+  bindFields();
+  renderStakeholders();
+  renderGrid();
+  renderPersonCards();
+})();
+</script>
+</body>
+</html>
