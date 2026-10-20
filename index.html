@@ -134,6 +134,14 @@
     .ps-watch b{color:var(--purple);}
     .ps-foot{display:flex; justify-content:space-between; margin-top:12px; font-size:10.5px; color:var(--mute);}
     .ps-foot .glory{font-style:italic;}
+    .ps-stop{margin-top:14px; page-break-inside:avoid;}
+    .ps-stop h2{font-size:13.5px; color:var(--purple); border-left:3px solid var(--teal); padding-left:8px; margin-bottom:6px; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .ps-stop .ps-note{color:var(--mute); font-size:10px; margin:2px 0 4px;}
+    .ps-field{margin:3px 0 7px;}
+    .ps-field b{color:var(--purple); font-size:10px; letter-spacing:.05em; display:block; text-transform:uppercase;}
+    .ps-person{border:1px solid var(--border); border-left:3px solid var(--teal); border-radius:6px; padding:7px 10px; margin:6px 0; page-break-inside:avoid; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .ps-person h3{font-size:12px; color:var(--purple); margin-bottom:3px;}
+    .ps-empty{color:var(--mute); font-style:italic; font-size:10.5px;}
   }
 </style>
 </head>
@@ -143,7 +151,7 @@
   <div class="head-inner">
     <div class="eyebrow">ACCELERATE &nbsp;·&nbsp; COMMUNICATING WITH INFLUENCE</div>
     <h1>Run your SHIFT.</h1>
-    <p class="lede">A self-coach for after the workshop. Bring one real influence challenge, work it through the five stops at your own pace, then print your influence map to keep. Nothing is stored and nothing leaves your browser: your answers exist only while this page is open, so work in one sitting and print your map before you close the tab.</p>
+    <p class="lede">A self-coach for after the workshop. Bring one real influence challenge, work it through the five stops at your own pace, then print your influence plan to keep. Nothing is stored and nothing leaves your browser: your answers exist only while this page is open, so work in one sitting and print your map before you close the tab.</p>
     <div class="head-rule"></div>
   </div>
 </header>
@@ -354,8 +362,8 @@
     </div>
 
     <div class="printbar">
-      <p>Done the five stops? Print your influence map: your challenge, your field, your three, and the moves each needs. Keep it where you plan your week, and re-map when the field moves. Remember: nothing is stored, so print before you close this page.</p>
-      <button class="big-print" onclick="doPrint()">Print my influence map</button>
+      <p>Done the five stops? Print your influence plan: your challenge, your field, your three, and every answer you captured across all five stops. Keep it where you plan your week, and re-map when the field moves. Remember: nothing is stored, so print before you close this page.</p>
+      <button class="big-print" onclick="doPrint()">Print my influence plan</button>
       <div class="util">
         <button onclick="clearAll()">Clear everything and start again</button>
       </div>
@@ -620,9 +628,41 @@
     }).join("");
     var today = new Date();
     var dateStr = today.toLocaleDateString("en-AU", { day:"numeric", month:"long", year:"numeric" });
+
+    function pf(label, val){
+      return (val && String(val).trim()) ? '<div class="ps-field"><b>' + label + '</b>' + esc(val) + '</div>' : "";
+    }
+    function sect(title, inner, note){
+      return '<div class="ps-stop"><h2>' + title + '</h2>' + (note ? '<div class="ps-note">' + note + '</div>' : "") +
+        (inner || '<div class="ps-empty">Nothing captured yet.</div>') + '</div>';
+    }
+    var persons = personSlots().list;
+    function personBlock(s, kindState, fields){
+      var d = kindState[s.id] || {};
+      var inner = fields.map(function(fd){ return pf(fd[0], d[fd[1]]); }).join("");
+      if(!inner) return "";
+      return '<div class="ps-person"><h3>' + esc(s.name || "Unnamed") + '</h3>' + inner + '</div>';
+    }
+    var hearHtml = persons.map(function(s){
+      return personBlock(s, state.hear, [["Their currency","currency"],["What I have heard them say","heard"],["Open question before I pitch","question"]]);
+    }).join("");
+    var ideaHtml = pf("My Big Idea", f.big) + pf("What is", f.was) + pf("What could be", f.could) +
+      pf("One number, with a point of view", f.number) + pf("My why, said first", f.why);
+    var flexHtml = persons.map(function(s){
+      return personBlock(s, state.flex, [["Their likely thinking preference","pref"],["My opening 30 seconds, in their preference","opening"]]);
+    }).join("");
+    var takeHtml = pf("The one action I am asking for", f.action) + pf("The window", f.window) +
+      pf("What I will carry in return", f.carry) + pf("The first move, with a date", f.first) +
+      pf("SBI+A · Situation", f.sbi_s) + pf("SBI+A · Behaviour", f.sbi_b) + pf("SBI+A · Impact", f.sbi_i) + pf("SBI+A · Agreement", f.sbi_a);
+    var stopsHtml =
+      sect("H · Hear what they value", hearHtml, "RASA: Receive, Appreciate, Summarise, Ask. A complaint is a value showing itself.") +
+      sect("I · Idea worth backing", ideaHtml, "One idea. Lead with why. One number, with a point of view.") +
+      sect("F · Flex and deliver", flexHtml, "Open in their preference. Under pressure: What / So what / Now what. Pace, space, grace.") +
+      sect("T · Take it forward", takeHtml, "Specific, bounded, reciprocal, dated. When you hit a wall: what would it take?");
+
     document.getElementById("printSheet").innerHTML =
-      '<div class="ps-band"><div class="eyebrow">ACCELERATE &nbsp;·&nbsp; COMMUNICATING WITH INFLUENCE &nbsp;·&nbsp; MY INFLUENCE MAP</div>' +
-      '<h1>See the field.</h1></div>' +
+      '<div class="ps-band"><div class="eyebrow">ACCELERATE &nbsp;·&nbsp; COMMUNICATING WITH INFLUENCE &nbsp;·&nbsp; MY INFLUENCE PLAN</div>' +
+      '<h1>My influence plan.</h1></div>' +
       '<div class="ps-challenge"><b>My challenge:</b> ' + esc(f.challenge || "(not yet written)") +
       (f.outcome ? ' &nbsp;&nbsp;<b>A win in 90 days:</b> ' + esc(f.outcome) : "") + '</div>' +
       '<div style="font-size:10.5px; color:var(--mute); margin-bottom:2px;">Power ↑ &nbsp;/&nbsp; Interest →</div>' +
@@ -632,6 +672,7 @@
       '<div class="pi-mid-h"></div><div class="pi-mid-v"></div>' + gridDots + '</div>' +
       '<table class="ps-table"><thead><tr><th>Stakeholder</th><th>Quadrant move</th><th>Salience</th><th>RACI</th><th>Currency</th><th>The conversation they need</th></tr></thead><tbody>' +
       (rows || '<tr><td colspan="6">No stakeholders mapped yet.</td></tr>') + '</tbody></table>' +
+      stopsHtml +
       '<div class="ps-watch"><b>WATCH OUTS:</b> Loud is not powerful, the noisiest person is not always the one who decides &nbsp;·&nbsp; Maps are living, re-map when urgency spikes &nbsp;·&nbsp; Check the high-power, low-interest person you have parked at "keep informed" &nbsp;·&nbsp; The order matters: See, then Hear, then Idea, then Flex, then Take it forward. And actually make the ask.</div>' +
       '<div class="ps-foot"><span>THE COHERENCE GROUP · Accelerate · Leading with Impact · Mapped ' + dateStr + '</span><span class="glory">Where there\'s guts there\'s glory.</span></div>';
   }
